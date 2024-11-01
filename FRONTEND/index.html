@@ -1448,7 +1448,11 @@ track.addEventListener('touchmove', (e) => {
     }
 });
 
-function closeFeedbackForm() {
+
+
+// Function to fetch and display feedback
+async function fetchFeedback() {
+  function closeFeedbackForm() {
     document.getElementById("feedbackForm").style.display = "none";
 }
 
@@ -1464,9 +1468,6 @@ function generateFirstLetterImage() {
     document.getElementById('firstLetterImage').textContent = firstLetter;
 }
 
-
-// Function to fetch and display feedback
-async function fetchFeedback() {
   function submitFeedback(event) {
     event.preventDefault();
 
