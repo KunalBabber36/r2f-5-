@@ -1471,13 +1471,15 @@ function submitFeedback(event) {
     const rating = document.getElementById('rating').value;
     const description = document.getElementById('description').value;
 
+
+
     fetch('https://r2f-5.vercel.app/submit-feedback', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, rating, description })
-    })
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name, rating, description })
+})
     .then(response => response.json())
     .then(data => {
         alert(data.message); // Display the message from the backend
