@@ -1421,17 +1421,20 @@ track.addEventListener('touchmove', (e) => {
     }
 });
 
+// Function to toggle the feedback form visibility
 function toggleFeedbackForm() {
     const form = document.getElementById('feedbackForm');
     form.style.display = form.style.display === 'block' ? 'none' : 'block';
 }
 
+// Function to generate and display the first letter of the user's name
 function generateFirstLetterImage() {
     const name = document.getElementById('name').value;
     const firstLetter = name.charAt(0).toUpperCase();
     document.getElementById('firstLetterImage').textContent = firstLetter;
 }
 
+// Function to handle feedback submission
 function submitFeedback(event) {
     event.preventDefault();
 
@@ -1450,6 +1453,8 @@ function submitFeedback(event) {
     .then(data => {
         alert(data.message); // Display the message from the backend
         fetchFeedback(); // Refresh the feedback list after submission
+        document.getElementById('feedbackForm').reset(); // Reset the form after submission
+        document.getElementById('firstLetterImage').textContent = ''; // Clear the first letter image
     })
     .catch(error => {
         console.error('Error:', error);
@@ -1466,9 +1471,8 @@ async function fetchFeedback() {
         }
 
         const feedbacks = await response.json();
-        
         const container = document.getElementById('feedback-container');
-        container.innerHTML = '';
+        container.innerHTML = ''; // Clear existing feedback
 
         if (feedbacks.length === 0) {
             container.textContent = 'No feedback available.';
@@ -1479,13 +1483,14 @@ async function fetchFeedback() {
             const slide = document.createElement('div');
             slide.classList.add('slide', 'swiper-slide');
 
-            // Image or fallback first letter
+            // Create an image element or fallback to the first letter of the name
             const img = document.createElement('img');
             img.classList.add('image');
             img.src = feedback.image || `images/${feedback.name.charAt(0).toUpperCase()}.png`;
+            img.alt = feedback.name; // Added alt attribute for accessibility
             slide.appendChild(img);
 
-            // Ratings
+            // Display client ratings as stars
             const clientRatings = document.createElement('div');
             clientRatings.classList.add('client__ratings');
             for (let i = 0; i < feedback.rating; i++) {
@@ -1495,17 +1500,17 @@ async function fetchFeedback() {
             }
             slide.appendChild(clientRatings);
 
-            // Description
+            // Add feedback description
             const description = document.createElement('p');
             description.textContent = feedback.description;
             slide.appendChild(description);
 
-            // Quote Icon
+            // Add a quote icon
             const quoteIcon = document.createElement('i');
             quoteIcon.classList.add('bx', 'bxs-quote-alt-left', 'quote-icon');
             slide.appendChild(quoteIcon);
 
-            // Details
+            // Add details section with the user's name
             const details = document.createElement('div');
             details.classList.add('details');
 
@@ -1526,48 +1531,6 @@ async function fetchFeedback() {
 
 // Fetch feedback on page load
 document.addEventListener('DOMContentLoaded', fetchFeedback);
-// Function to submit feedback
-async function submitFeedback() {
-    const name = document.getElementById('name').value;
-    const rating = document.getElementById('rating').value;
-    const description = document.getElementById('description').value;
-
-    try {
-        const response = await fetch('/submit-feedback', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, rating, description })
-        });
-        const result = await response.json();
-        alert(result.message);
-        fetchFeedback(); // Refresh feedback list
-    } catch (error) {
-        console.error('Error submitting feedback:', error);
-    }
-}
-
-// Function to fetch and display feedback
-async function fetchFeedback() {
-    try {
-        const response = await fetch('/get-feedback');
-        const feedbacks = await response.json();
-        const feedbackContainer = document.getElementById('feedback-container');
-        feedbackContainer.innerHTML = ''; // Clear existing feedback
-
-        feedbacks.forEach(feedback => {
-            const feedbackElement = document.createElement('div');
-            feedbackElement.textContent = `${feedback.name}: ${feedback.description} (Rating: ${feedback.rating})`;
-            feedbackContainer.appendChild(feedbackElement);
-        });
-    } catch (error) {
-        console.error('Error fetching feedback:', error);
-    }
-}
-
-// Call fetchFeedback() on page load
-window.onload = fetchFeedback;
 
 
   </script>
