@@ -633,7 +633,34 @@ h2 {
   <section class="container">
     <div class="testimonial mySwiper">
       <div class="testi-content swiper-wrapper">
-        <div id="feedback-container"></div>
+
+ <!-- Feedback Button -->
+ <button onclick="toggleFeedbackForm()">Give Feedback</button>
+
+ <!-- Feedback Form -->
+ <div id="feedbackForm" style="display: none;">
+     <form onsubmit="submitFeedback(event)">
+         <div>
+             <label for="name">Name:</label>
+             <input type="text" id="name" required oninput="generateFirstLetterImage()">
+         </div>
+         <div>
+             <label for="rating">Rating (1-5):</label>
+             <input type="number" id="rating" min="1" max="5" required>
+         </div>
+         <div>
+             <label for="description">Description:</label>
+             <textarea id="description" required></textarea>
+         </div>
+         <div>
+             <span id="firstLetterImage" style="font-size: 40px;"></span>
+         </div>
+         <button type="submit">Submit Feedback</button>
+     </form>
+ </div>
+
+ <!-- Feedback Display -->
+ <div id="feedback-container"></div>
 
         
         <div class="slide swiper-slide">
@@ -1411,119 +1438,111 @@ track.addEventListener('touchmove', (e) => {
     }
 });
 
-
 function toggleFeedbackForm() {
-  const form = document.getElementById('feedbackForm');
-  form.style.display = form.style.display === 'block' ? 'none' : 'block';
-}
+            const form = document.getElementById('feedbackForm');
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        }
 
-function generateFirstLetterImage() {
-  const name = document.getElementById('name').value;
-  const firstLetter = name.charAt(0).toUpperCase();
-  document.getElementById('firstLetterImage').textContent = firstLetter;
-}
+        function generateFirstLetterImage() {
+            const name = document.getElementById('name').value;
+            const firstLetter = name.charAt(0).toUpperCase();
+            document.getElementById('firstLetterImage').textContent = firstLetter;
+        }
 
-function submitFeedback(event) {
-  event.preventDefault();
+        async function submitFeedback(event) {
+            event.preventDefault();
 
-  const name = document.getElementById('name').value;
-  const rating = document.getElementById('rating').value;
-  const description = document.getElementById('description').value;
+            const name = document.getElementById('name').value;
+            const rating = document.getElementById('rating').value;
+            const description = document.getElementById('description').value;
 
-  fetch('https://r2f-5.vercel.app/submit-feedback', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name, rating, description })
-  })
-  .then(response => response.json())
-  .then(data => {
-    alert(data.message); // Display the message from the backend
-    fetchFeedback(); // Refresh the feedback list after submission
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-}
+            try {
+                const response = await fetch('https://r2f-5.vercel.app/submit-feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, rating, description })
+                });
 
-// Function to fetch and display feedback
-async function fetchFeedback() {
-  try {
-    const response = await fetch('https://r2f-5.vercel.app/get-feedback');
+                const data = await response.json();
+                alert(data.message);
+                fetchFeedback(); // Refresh the feedback list after submission
+                document.getElementById('feedbackForm').reset(); // Reset form after submission
+                document.getElementById('firstLetterImage').textContent = ''; // Clear the first letter display
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('There was an error submitting your feedback.');
+            }
+        }
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch feedback: ${response.status} ${response.statusText}`);
-    }
+        async function fetchFeedback() {
+            try {
+                const response = await fetch('https://r2f-5.vercel.app/get-feedback');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch feedback: ${response.status} ${response.statusText}`);
+                }
 
-    const feedbacks = await response.json();
-    
-    const container = document.getElementById('feedback-container');
-    container.innerHTML = '';
+                const feedbacks = await response.json();
+                const container = document.getElementById('feedback-container');
+                container.innerHTML = '';
 
-    if (feedbacks.length === 0) {
-      container.textContent = 'No feedback available.';
-      return;
-    }
+                if (feedbacks.length === 0) {
+                    container.textContent = 'No feedback available.';
+                    return;
+                }
 
-    feedbacks.forEach(feedback => {
-      const slide = document.createElement('div');
-      slide.classList.add('slide');
-      slide.classList.add('swiper-slide');
+                feedbacks.forEach(feedback => {
+                    const slide = document.createElement('div');
+                    slide.classList.add('slide');
 
-      // Image or fallback first letter
-      const img = document.createElement('img');
-      img.classList.add('image');
-      if (feedback.image) {
-        img.src = feedback.image; // Use the image URL if available
-      } else {
-        const firstLetter = feedback.name.charAt(0).toUpperCase();
-        img.src = `images/${firstLetter}.png`; // Replace with your letter image path
-      }
-      slide.appendChild(img);
+                    const img = document.createElement('img');
+                    img.classList.add('image');
+                    if (feedback.image) {
+                        img.src = feedback.image; // Use the image URL if available
+                    } else {
+                        const firstLetter = feedback.name.charAt(0).toUpperCase();
+                        img.src = `images/${firstLetter}.png`; // Fallback image
+                    }
+                    slide.appendChild(img);
 
-      // Ratings
-      const clientRatings = document.createElement('div');
-      clientRatings.classList.add('client__ratings');
-      for (let i = 0; i < feedback.rating; i++) {
-        const star = document.createElement('span');
-        star.innerHTML = '<i class="ri-star-fill"></i>';
-        clientRatings.appendChild(star);
-      }
-      slide.appendChild(clientRatings);
+                    const clientRatings = document.createElement('div');
+                    clientRatings.classList.add('client__ratings');
+                    for (let i = 0; i < feedback.rating; i++) {
+                        const star = document.createElement('span');
+                        star.innerHTML = '<i class="ri-star-fill"></i>';
+                        clientRatings.appendChild(star);
+                    }
+                    slide.appendChild(clientRatings);
 
-      // Description
-      const description = document.createElement('p');
-      description.textContent = feedback.description;
-      slide.appendChild(description);
+                    const description = document.createElement('p');
+                    description.textContent = feedback.description;
+                    slide.appendChild(description);
 
-      // Quote Icon
-      const quoteIcon = document.createElement('i');
-      quoteIcon.classList.add('bx', 'bxs-quote-alt-left', 'quote-icon');
-      slide.appendChild(quoteIcon);
+                    const quoteIcon = document.createElement('i');
+                    quoteIcon.classList.add('bx', 'bxs-quote-alt-left', 'quote-icon');
+                    slide.appendChild(quoteIcon);
 
-      // Details
-      const details = document.createElement('div');
-      details.classList.add('details');
+                    const details = document.createElement('div');
+                    details.classList.add('details');
 
-      const name = document.createElement('span');
-      name.classList.add('name');
-      name.textContent = feedback.name;
-      details.appendChild(name);
+                    const name = document.createElement('span');
+                    name.classList.add('name');
+                    name.textContent = feedback.name;
+                    details.appendChild(name);
 
-      slide.appendChild(details);
-      container.appendChild(slide);
-    });
-  } catch (error) {
-    console.error('Error fetching feedback:', error);
-    const container = document.getElementById('feedback-container');
-    container.textContent = 'An error occurred while fetching feedback.';
-  }
-}
+                    slide.appendChild(details);
+                    container.appendChild(slide);
+                });
+            } catch (error) {
+                console.error('Error fetching feedback:', error);
+                const container = document.getElementById('feedback-container');
+                container.textContent = 'An error occurred while fetching feedback.';
+            }
+        }
 
-// Fetch feedback on page load
-fetchFeedback();
-
+        // Fetch feedback on page load
+        fetchFeedback();
   </script>
   <script src="script.js"></script>
   <!-- <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script> -->
