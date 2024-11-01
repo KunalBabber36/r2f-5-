@@ -339,17 +339,17 @@ app.post('/comments', async (req, res) => {
 //   }
 // });
 // Define a schema and model for feedback
-
-// Mongoose Schema and Model
+// Your schema and model
 const feedbackSchema = new mongoose.Schema({
   name: String,
   rating: Number,
   description: String,
-  timestamp: { type: Date, default: Date.now }
+  timestamp: { type: Date, default: Date.now },
 });
+
 const Feedback = mongoose.model('Feedback', feedbackSchema);
 
-// POST Endpoint to handle form submission
+// POST endpoint for submitting feedback
 app.post('/submit-feedback', async (req, res) => {
   try {
       const { name, rating, description } = req.body;
@@ -362,7 +362,7 @@ app.post('/submit-feedback', async (req, res) => {
   }
 });
 
-// GET Endpoint to fetch feedback
+// GET endpoint for fetching feedback
 app.get('/get-feedback', async (req, res) => {
   try {
       const feedbacks = await Feedback.find().sort({ timestamp: -1 });
@@ -370,6 +370,18 @@ app.get('/get-feedback', async (req, res) => {
   } catch (error) {
       console.error('Error fetching feedback:', error);
       res.status(500).json({ message: 'Failed to fetch feedback.' });
+  }
+});
+
+// Endpoint to delete feedback by ID
+app.delete('/delete-feedback/:id', async (req, res) => {
+  try {
+      const feedbackId = req.params.id;
+      await Feedback.findByIdAndDelete(feedbackId);
+      res.status(200).json({ message: 'Feedback deleted successfully!' });
+  } catch (error) {
+      console.error('Error deleting feedback:', error);
+      res.status(500).json({ message: 'Failed to delete feedback.' });
   }
 });
 

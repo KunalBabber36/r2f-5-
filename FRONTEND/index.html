@@ -612,7 +612,7 @@ h2 {
       <!-- Close Button -->
       <button class="close-btn" onclick="closeFeedbackForm()">×</button>
       
-      <form id="feedbackForm" onsubmit="submitFeedback(event)">
+      <form onsubmit="submitFeedback(event)">
           <h2>Feedback Form</h2>
   
           <!-- First Letter Image -->
@@ -1465,15 +1465,14 @@ function generateFirstLetterImage() {
 }
 
 function submitFeedback(event) {
-    event.preventDefault();
-    console.log("Submitting feedback..."); // Check if this runs
+    event.preventDefault(); // Prevent default form submission
 
     const name = document.getElementById('name').value;
     const rating = document.getElementById('rating').value;
     const description = document.getElementById('description').value;
 
     fetch('https://r2f-5.vercel.app/submit-feedback', {
-        method: 'POST',
+        method: 'POST', // This should be POST
         headers: {
             'Content-Type': 'application/json'
         },
@@ -1481,7 +1480,7 @@ function submitFeedback(event) {
     })
     .then(response => response.json())
     .then(data => {
-        alert(data.message);
+        alert(data.message); // Display the message from the backend
         fetchFeedback(); // Refresh the feedback list after submission
     })
     .catch(error => {
