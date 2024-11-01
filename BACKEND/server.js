@@ -361,17 +361,17 @@ app.post('/submit-feedback', async (req, res) => {
       res.status(500).json({ message: 'Failed to submit feedback.' });
   }
 });
-
 app.get('/get-feedback', async (req, res) => {
   try {
       const feedbacks = await Feedback.find().sort({ timestamp: -1 });
-      console.log('Fetched feedback:', feedbacks); // Log the fetched feedback
+      console.log('Fetched feedbacks from database:', feedbacks); // Log fetched data
       res.status(200).json(feedbacks);
   } catch (error) {
-      console.error('Error fetching feedback:', error);
+      console.error('Error fetching feedback from database:', error);
       res.status(500).json({ message: 'Failed to fetch feedback.' });
   }
 });
+
 
 // Endpoint to delete feedback by ID
 app.delete('/delete-feedback/:id', async (req, res) => {

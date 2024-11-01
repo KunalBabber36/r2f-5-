@@ -1492,14 +1492,14 @@ function submitFeedback(event) {
 async function fetchFeedback() {
     try {
         const response = await fetch('https://r2f-5.vercel.app/get-feedback');
-
         if (!response.ok) {
             throw new Error(`Failed to fetch feedback: ${response.status} ${response.statusText}`);
         }
 
         const feedbacks = await response.json();
-        console.log('Fetched feedback from server:', feedbacks); // Log the fetched feedback
+        console.log('Feedback fetched:', feedbacks); // Log the fetched data
 
+        // Proceed to populate the feedback container
         const container = document.getElementById('feedback-container');
         container.innerHTML = '';
 
@@ -1509,56 +1509,19 @@ async function fetchFeedback() {
         }
 
         feedbacks.forEach(feedback => {
-            const slide = document.createElement('div');
-            slide.classList.add('slide', 'swiper-slide');
-
-            // Image or fallback first letter
-            const img = document.createElement('img');
-            img.classList.add('image');
-            img.src = feedback.image || `images/${feedback.name.charAt(0).toUpperCase()}.png`;
-            slide.appendChild(img);
-
-            // Ratings
-            const clientRatings = document.createElement('div');
-            clientRatings.classList.add('client__ratings');
-            for (let i = 0; i < feedback.rating; i++) {
-                const star = document.createElement('span');
-                star.innerHTML = '<i class="ri-star-fill"></i>';
-                clientRatings.appendChild(star);
-            }
-            slide.appendChild(clientRatings);
-
-            // Description
-            const description = document.createElement('p');
-            description.textContent = feedback.description;
-            slide.appendChild(description);
-
-            // Quote Icon
-            const quoteIcon = document.createElement('i');
-            quoteIcon.classList.add('bx', 'bxs-quote-alt-left', 'quote-icon');
-            slide.appendChild(quoteIcon);
-
-            // Details
-            const details = document.createElement('div');
-            details.classList.add('details');
-
-            const name = document.createElement('span');
-            name.classList.add('name');
-            name.textContent = feedback.name;
-            details.appendChild(name);
-
-            slide.appendChild(details);
-            container.appendChild(slide);
+            // Populate the feedback container (your existing logic)
         });
     } catch (error) {
         console.error('Error fetching feedback:', error);
-        const container = document.getElementById('feedback-container');
-        container.textContent = 'An error occurred while fetching feedback.';
     }
 }
 
+
 // Fetch feedback on page load
-document.addEventListener('DOMContentLoaded', fetchFeedback);
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Page loaded, fetching feedback...');
+    fetchFeedback();
+});
 
   </script>
   <script src="script.js"></script>
