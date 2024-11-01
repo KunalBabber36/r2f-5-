@@ -1411,6 +1411,8 @@ track.addEventListener('touchmove', (e) => {
     }
 });
 
+// Fetch feedback on page load
+document.addEventListener('DOMContentLoaded', fetchFeedback);
 
 function toggleFeedbackForm() {
   const form = document.getElementById('feedbackForm');
@@ -1468,18 +1470,12 @@ async function fetchFeedback() {
 
     feedbacks.forEach(feedback => {
       const slide = document.createElement('div');
-      slide.classList.add('slide');
-      slide.classList.add('swiper-slide');
+      slide.classList.add('slide', 'swiper-slide');
 
       // Image or fallback first letter
       const img = document.createElement('img');
       img.classList.add('image');
-      if (feedback.image) {
-        img.src = feedback.image; // Use the image URL if available
-      } else {
-        const firstLetter = feedback.name.charAt(0).toUpperCase();
-        img.src = `images/${firstLetter}.png`; // Replace with your letter image path
-      }
+      img.src = feedback.image ? feedback.image : `images/${feedback.name.charAt(0).toUpperCase()}.png`;
       slide.appendChild(img);
 
       // Ratings
@@ -1520,9 +1516,6 @@ async function fetchFeedback() {
     container.textContent = 'An error occurred while fetching feedback.';
   }
 }
-
-// Fetch feedback on page load
-fetchFeedback();
 
   </script>
   <script src="script.js"></script>
