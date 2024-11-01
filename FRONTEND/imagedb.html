@@ -176,40 +176,66 @@
 
         loadPlans();
  // Function to fetch and display feedback
- async function loadFeedback() {
+ async function fetchFeedback() {
             try {
-                const response = await fetch("/feedback");
+                const response = await fetch('https://r2f-5.vercel.app/get-feedback');
                 const feedbacks = await response.json();
-                const container = document.getElementById("feedback-container");
-                container.innerHTML = "";
+                
+                const container = document.getElementById('feedback-container');
+                container.innerHTML = '';
 
                 feedbacks.forEach(feedback => {
-                    const feedbackDiv = document.createElement("div");
-                    feedbackDiv.className = "feedback";
-                    feedbackDiv.innerHTML = `
-                        <p><strong>Name:</strong> ${feedback.name}</p>
-                        <p><strong>Rating:</strong> ${feedback.rating}</p>
-                        <p><strong>Description:</strong> ${feedback.description}</p>
-                        <span class="delete-btn" onclick="deleteFeedback('${feedback._id}')">Delete</span>
-                    `;
+                    const feedbackDiv = document.createElement('div');
+                    feedbackDiv.classList.add('feedback');
+
+                    const detailsDiv = document.createElement('div');
+                    const name = document.createElement('div');
+                    name.classList.add('name');
+                    name.textContent = feedback.name;
+
+                    const rating = document.createElement('div');
+                    rating.classList.add('rating');
+                    rating.textContent = `Rating: ${feedback.rating}`;
+
+                    const description = document.createElement('div');
+                    description.classList.add('description');
+                    description.textContent = feedback.description;
+
+                    detailsDiv.appendChild(name);
+                    detailsDiv.appendChild(rating);
+                    detailsDiv.appendChild(description);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = () => deleteFeedback(feedback._id);
+
+                    feedbackDiv.appendChild(detailsDiv);
+                    feedbackDiv.appendChild(deleteButton);
+
                     container.appendChild(feedbackDiv);
                 });
             } catch (error) {
-                console.error("Error loading feedback:", error);
+                console.error('Error fetching feedback:', error);
             }
         }
 
-        async function deleteFeedback(id) {
+        // Function to delete feedback
+        async function deleteFeedback(feedbackId) {
             try {
-                await fetch(`/feedback/${id}`, { method: "DELETE" });
-                loadFeedback();
+                const response = await fetch(`https://r2f-5.vercel.app/delete-feedback/${feedbackId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                alert(data.message);
+                fetchFeedback(); // Refresh the feedback list
             } catch (error) {
-                console.error("Error deleting feedback:", error);
+                console.error('Error deleting feedback:', error);
             }
         }
 
-        // Load feedback on page load
-        window.onload = loadFeedback;
+        // Fetch feedback on page load
+        fetchFeedback();
   </script>
 </body>
 </html>

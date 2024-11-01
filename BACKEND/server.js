@@ -339,44 +339,45 @@ app.post('/comments', async (req, res) => {
 //   }
 // });
 // Define a schema and model for feedback
-
-// Feedback Schema and Model
 const feedbackSchema = new mongoose.Schema({
   name: String,
   rating: Number,
   description: String,
+  timestamp: { type: Date, default: Date.now }
 });
 
-const Feedback = mongoose.model("Feedback", feedbackSchema);
+const Feedback = mongoose.model('Feedback', feedbackSchema);
 
-// Routes
-app.post("/feedback", async (req, res) => {
+// Endpoint to handle form submission
+app.post('/submit-feedback', async (req, res) => {
   try {
       const { name, rating, description } = req.body;
       const feedback = new Feedback({ name, rating, description });
       await feedback.save();
-      res.status(201).json({ message: "Feedback submitted successfully!" });
+      res.status(200).json({ message: 'Feedback submitted successfully!' });
   } catch (error) {
-      res.status(500).json({ error: "Failed to submit feedback" });
+      console.error('Error saving feedback:', error);
+      res.status(500).json({ message: 'Failed to submit feedback.' });
   }
 });
-
-app.get("/feedback", async (req, res) => {
+app.get('/get-feedback', async (req, res) => {
   try {
-      const feedbacks = await Feedback.find();
+      const feedbacks = await Feedback.find().sort({ timestamp: -1 }); // Sort by latest feedback
       res.status(200).json(feedbacks);
   } catch (error) {
-      res.status(500).json({ error: "Failed to fetch feedback" });
+      console.error('Error fetching feedback:', error);
+      res.status(500).json({ message: 'Failed to fetch feedback.' });
   }
 });
-
-app.delete("/feedback/:id", async (req, res) => {
+// Endpoint to delete feedback by ID
+app.delete('/delete-feedback/:id', async (req, res) => {
   try {
-      const { id } = req.params;
-      await Feedback.findByIdAndDelete(id);
-      res.status(200).json({ message: "Feedback deleted successfully!" });
+      const feedbackId = req.params.id;
+      await Feedback.findByIdAndDelete(feedbackId);
+      res.status(200).json({ message: 'Feedback deleted successfully!' });
   } catch (error) {
-      res.status(500).json({ error: "Failed to delete feedback" });
+      console.error('Error deleting feedback:', error);
+      res.status(500).json({ message: 'Failed to delete feedback.' });
   }
 });
 
