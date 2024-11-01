@@ -99,19 +99,3 @@ function openGmail() {
   var body = encodeURIComponent("Your message goes here");
   window.open("https://mail.google.com/mail/?view=cm&fs=1&to=prami72rao@gmail.com&su=" + subject + "&body=" + body);
 }
-function toggleFeedbackForm() {
-  const form = document.getElementById('feedbackForm');
-  form.style.display = form.style.display === 'block' ? 'none' : 'block';
-}
-
-function generateFirstLetterImage() {
-  const name = document.getElementById('name').value;
-  const firstLetter = name.charAt(0).toUpperCase();
-  document.getElementById('firstLetterImage').textContent = firstLetter;
-}
-
-function submitFeedback(event) {
-  event.preventDefault();
-  // Your logic to handle form submission goes here
-  alert('Feedback submitted!');
-}
