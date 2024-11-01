@@ -1411,43 +1411,9 @@ track.addEventListener('touchmove', (e) => {
     }
 });
 
-// Fetch feedback on page load
-document.addEventListener('DOMContentLoaded', fetchFeedback);
-
-function toggleFeedbackForm() {
-  const form = document.getElementById('feedbackForm');
-  form.style.display = form.style.display === 'block' ? 'none' : 'block';
-}
-
-function generateFirstLetterImage() {
-  const name = document.getElementById('name').value;
-  const firstLetter = name.charAt(0).toUpperCase();
-  document.getElementById('firstLetterImage').textContent = firstLetter;
-}
-
-function submitFeedback(event) {
-  event.preventDefault();
-
-  const name = document.getElementById('name').value;
-  const rating = document.getElementById('rating').value;
-  const description = document.getElementById('description').value;
-
-  fetch('https://r2f-5.vercel.app/submit-feedback', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name, rating, description })
-  })
-  .then(response => response.json())
-  .then(data => {
-    alert(data.message); // Display the message from the backend
-    fetchFeedback(); // Refresh the feedback list after submission
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-}
+document.addEventListener('DOMContentLoaded', () => {
+  fetchFeedback(); // Fetch feedback when the DOM is fully loaded
+});
 
 // Function to fetch and display feedback
 async function fetchFeedback() {
@@ -1459,9 +1425,9 @@ async function fetchFeedback() {
     }
 
     const feedbacks = await response.json();
-    
+    console.log('Feedbacks:', feedbacks); // Log feedbacks for debugging
     const container = document.getElementById('feedback-container');
-    container.innerHTML = '';
+    container.innerHTML = ''; // Clear existing content
 
     if (feedbacks.length === 0) {
       container.textContent = 'No feedback available.';
@@ -1472,33 +1438,33 @@ async function fetchFeedback() {
       const slide = document.createElement('div');
       slide.classList.add('slide', 'swiper-slide');
 
-      // Image or fallback first letter
+      // Create image element or fallback to the first letter
       const img = document.createElement('img');
       img.classList.add('image');
-      img.src = feedback.image ? feedback.image : `images/${feedback.name.charAt(0).toUpperCase()}.png`;
+      img.src = feedback.image || `images/${feedback.name.charAt(0).toUpperCase()}.png`; // Fallback to first letter
       slide.appendChild(img);
 
-      // Ratings
+      // Create ratings
       const clientRatings = document.createElement('div');
       clientRatings.classList.add('client__ratings');
       for (let i = 0; i < feedback.rating; i++) {
         const star = document.createElement('span');
-        star.innerHTML = '<i class="ri-star-fill"></i>';
+        star.innerHTML = '<i class="ri-star-fill"></i>'; // Assuming you're using some icon library
         clientRatings.appendChild(star);
       }
       slide.appendChild(clientRatings);
 
-      // Description
+      // Create description
       const description = document.createElement('p');
       description.textContent = feedback.description;
       slide.appendChild(description);
 
-      // Quote Icon
+      // Create quote icon
       const quoteIcon = document.createElement('i');
       quoteIcon.classList.add('bx', 'bxs-quote-alt-left', 'quote-icon');
       slide.appendChild(quoteIcon);
 
-      // Details
+      // Create details
       const details = document.createElement('div');
       details.classList.add('details');
 
@@ -1510,10 +1476,36 @@ async function fetchFeedback() {
       slide.appendChild(details);
       container.appendChild(slide);
     });
+
+    // Initialize Swiper or any other slider library if necessary
+    // swiperInstance.update(); // Call this if you're using Swiper.js
+
   } catch (error) {
     console.error('Error fetching feedback:', error);
     const container = document.getElementById('feedback-container');
     container.textContent = 'An error occurred while fetching feedback.';
+  }
+}
+
+// Optional: Function to submit feedback (if needed)
+async function submitFeedback(feedbackData) {
+  try {
+    const response = await fetch('https://r2f-5.vercel.app/submit-feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(feedbackData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to submit feedback: ${response.status} ${response.statusText}`);
+    }
+
+    // Re-fetch feedback after submission
+    fetchFeedback();
+  } catch (error) {
+    console.error('Error submitting feedback:', error);
   }
 }
 
