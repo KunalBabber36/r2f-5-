@@ -339,17 +339,16 @@ app.post('/comments', async (req, res) => {
 //   }
 // });
 // Define a schema and model for feedback
-// Your schema and model
 const feedbackSchema = new mongoose.Schema({
   name: String,
   rating: Number,
   description: String,
-  timestamp: { type: Date, default: Date.now },
+  timestamp: { type: Date, default: Date.now }
 });
 
 const Feedback = mongoose.model('Feedback', feedbackSchema);
 
-// POST endpoint for submitting feedback
+// Endpoint to handle form submission
 app.post('/submit-feedback', async (req, res) => {
   try {
       const { name, rating, description } = req.body;
@@ -361,18 +360,15 @@ app.post('/submit-feedback', async (req, res) => {
       res.status(500).json({ message: 'Failed to submit feedback.' });
   }
 });
-
-// GET endpoint for fetching feedback
 app.get('/get-feedback', async (req, res) => {
   try {
-      const feedbacks = await Feedback.find().sort({ timestamp: -1 });
+      const feedbacks = await Feedback.find().sort({ timestamp: -1 }); // Sort by latest feedback
       res.status(200).json(feedbacks);
   } catch (error) {
       console.error('Error fetching feedback:', error);
       res.status(500).json({ message: 'Failed to fetch feedback.' });
   }
 });
-
 // Endpoint to delete feedback by ID
 app.delete('/delete-feedback/:id', async (req, res) => {
   try {

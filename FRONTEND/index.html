@@ -1465,14 +1465,14 @@ function generateFirstLetterImage() {
 }
 
 function submitFeedback(event) {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
 
     const name = document.getElementById('name').value;
     const rating = document.getElementById('rating').value;
     const description = document.getElementById('description').value;
 
     fetch('https://r2f-5.vercel.app/submit-feedback', {
-        method: 'POST', // This should be POST
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -1487,7 +1487,6 @@ function submitFeedback(event) {
         console.error('Error:', error);
     });
 }
-
 
 // Function to fetch and display feedback
 async function fetchFeedback() {
