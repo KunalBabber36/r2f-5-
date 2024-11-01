@@ -1471,15 +1471,13 @@ function submitFeedback(event) {
     const rating = document.getElementById('rating').value;
     const description = document.getElementById('description').value;
 
-
-
     fetch('https://r2f-5.vercel.app/submit-feedback', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name, rating, description })
-})
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, rating, description })
+    })
     .then(response => response.json())
     .then(data => {
         alert(data.message); // Display the message from the backend
@@ -1513,11 +1511,13 @@ async function fetchFeedback() {
             const slide = document.createElement('div');
             slide.classList.add('slide', 'swiper-slide');
 
+            // Image or fallback first letter
             const img = document.createElement('img');
             img.classList.add('image');
             img.src = feedback.image || `images/${feedback.name.charAt(0).toUpperCase()}.png`;
             slide.appendChild(img);
 
+            // Ratings
             const clientRatings = document.createElement('div');
             clientRatings.classList.add('client__ratings');
             for (let i = 0; i < feedback.rating; i++) {
@@ -1527,10 +1527,17 @@ async function fetchFeedback() {
             }
             slide.appendChild(clientRatings);
 
+            // Description
             const description = document.createElement('p');
             description.textContent = feedback.description;
             slide.appendChild(description);
 
+            // Quote Icon
+            const quoteIcon = document.createElement('i');
+            quoteIcon.classList.add('bx', 'bxs-quote-alt-left', 'quote-icon');
+            slide.appendChild(quoteIcon);
+
+            // Details
             const details = document.createElement('div');
             details.classList.add('details');
 
