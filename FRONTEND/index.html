@@ -1446,7 +1446,6 @@ function submitFeedback(event) {
     console.error('Error:', error);
   });
 }
-fetchFeedback();
 
 // Function to fetch and display feedback
 async function fetchFeedback() {
@@ -1469,11 +1468,8 @@ async function fetchFeedback() {
 
     feedbacks.forEach(feedback => {
       const slide = document.createElement('div');
-      // slide.classList.add('slide');
-      // slide.classList.add('swiper-slide');
-      // slide.classList.add(' swiper-slide-active');
-      slide.classList.add('slide swiper-slide swiper-slide-duplicate swiper-slide-active testi-content swiper-wrapper');
-      slide.style="cursor: grab; transition-duration: 0ms; transform: translate3d(0px, 0px, 0px);";
+      slide.classList.add('slide');
+      slide.classList.add('swiper-slide');
 
       // Image or fallback first letter
       const img = document.createElement('img');
