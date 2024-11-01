@@ -350,6 +350,7 @@ const Feedback = mongoose.model('Feedback', feedbackSchema);
 
 // Endpoint to handle form submission
 app.post('/submit-feedback', async (req, res) => {
+  console.log(req.body); // Log incoming request body
   try {
       const { name, rating, description } = req.body;
       const feedback = new Feedback({ name, rating, description });
@@ -360,6 +361,7 @@ app.post('/submit-feedback', async (req, res) => {
       res.status(500).json({ message: 'Failed to submit feedback.' });
   }
 });
+
 app.get('/get-feedback', async (req, res) => {
   try {
       const feedbacks = await Feedback.find().sort({ timestamp: -1 }); // Sort by latest feedback
