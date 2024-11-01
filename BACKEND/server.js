@@ -354,22 +354,25 @@ app.post('/submit-feedback', async (req, res) => {
       const { name, rating, description } = req.body;
       const feedback = new Feedback({ name, rating, description });
       await feedback.save();
+      console.log('Feedback saved:', feedback); // Log the saved feedback
       res.status(200).json({ message: 'Feedback submitted successfully!' });
   } catch (error) {
       console.error('Error saving feedback:', error);
       res.status(500).json({ message: 'Failed to submit feedback.' });
   }
 });
+
 app.get('/get-feedback', async (req, res) => {
   try {
-      const feedbacks = await Feedback.find().sort({ timestamp: -1 }); // Sort by latest feedback
-      res.set('Cache-Control', 'no-store');
+      const feedbacks = await Feedback.find().sort({ timestamp: -1 });
+      console.log('Fetched feedback:', feedbacks); // Log the fetched feedback
       res.status(200).json(feedbacks);
   } catch (error) {
       console.error('Error fetching feedback:', error);
       res.status(500).json({ message: 'Failed to fetch feedback.' });
   }
 });
+
 // Endpoint to delete feedback by ID
 app.delete('/delete-feedback/:id', async (req, res) => {
   try {

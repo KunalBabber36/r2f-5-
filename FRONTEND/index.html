@@ -1498,7 +1498,8 @@ async function fetchFeedback() {
         }
 
         const feedbacks = await response.json();
-        
+        console.log('Fetched feedback from server:', feedbacks); // Log the fetched feedback
+
         const container = document.getElementById('feedback-container');
         container.innerHTML = '';
 
