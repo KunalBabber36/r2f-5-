@@ -234,6 +234,27 @@ h2 {
             font-size: 24px;
             margin-top: 10px;
         }
+        .feedback-form-container {
+    position: relative;
+    /* Additional styling for your feedback form container */
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #000; /* Adjust color as needed */
+}
+
+.close-btn:hover {
+    color: #f00; /* Change color on hover */
+}
+
   </style>
 </head>
 
@@ -580,44 +601,47 @@ h2 {
   </section>
 
 
-  <div class="bg_blur2"></div>
-<!-- Feedback Button -->
-<button class="feedback-btn" onclick="toggleFeedbackForm()">Feedback</button>
-
-<!-- Feedback Form -->
-<div class="feedback-form-container" id="feedbackForm" style="display: none;">
-    <form onsubmit="submitFeedback(event)">
-        <h2>Feedback Form</h2>
-
-        <!-- First Letter Image -->
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required oninput="generateFirstLetterImage()" placeholder="Enter your name">
-            <div class="first-letter-image" id="firstLetterImage">A</div>
-        </div>
-
-        <!-- Rating -->
-        <div class="form-group">
-            <label for="rating">Rating:</label>
-            <select id="rating" name="rating" required>
-                <option value="5">5 Stars</option>
-                <option value="4">4 Stars</option>
-                <option value="3">3 Stars</option>
-                <option value="2">2 Stars</option>
-                <option value="1">1 Star</option>
-            </select>
-        </div>
-
-        <!-- Description -->
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" required placeholder="Enter your feedback"></textarea>
-        </div>
-
-        <!-- Submit Button -->
-        <button type="submit">Submit Feedback</button>
-    </form>
-</div>
+  <div class="bg_blur2"></div><!-- Feedback Button -->
+  <button class="feedback-btn" onclick="toggleFeedbackForm()">Feedback</button>
+  
+  <!-- Feedback Form -->
+  <div class="feedback-form-container" id="feedbackForm" style="display: none;">
+      <!-- Close Button -->
+      <button class="close-btn" onclick="closeFeedbackForm()">×</button>
+      
+      <form onsubmit="submitFeedback(event)">
+          <h2>Feedback Form</h2>
+  
+          <!-- First Letter Image -->
+          <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" id="name" name="name" required oninput="generateFirstLetterImage()" placeholder="Enter your name">
+              <div class="first-letter-image" id="firstLetterImage">A</div>
+          </div>
+  
+          <!-- Rating -->
+          <div class="form-group">
+              <label for="rating">Rating:</label>
+              <select id="rating" name="rating" required>
+                  <option value="5">5 Stars</option>
+                  <option value="4">4 Stars</option>
+                  <option value="3">3 Stars</option>
+                  <option value="2">2 Stars</option>
+                  <option value="1">1 Star</option>
+              </select>
+          </div>
+  
+          <!-- Description -->
+          <div class="form-group">
+              <label for="description">Description:</label>
+              <textarea id="description" name="description" required placeholder="Enter your feedback"></textarea>
+          </div>
+  
+          <!-- Submit Button -->
+          <button type="submit">Submit Feedback</button>
+      </form>
+  </div>
+  
 
 <section class="container">
     <div class="testimonial mySwiper">
@@ -1420,6 +1444,11 @@ track.addEventListener('touchmove', (e) => {
         updateCarousel();
     }
 });
+
+function closeFeedbackForm() {
+    document.getElementById("feedbackForm").style.display = "none";
+}
+
 
 function toggleFeedbackForm() {
     const form = document.getElementById('feedbackForm');
