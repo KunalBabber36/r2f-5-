@@ -1432,29 +1432,29 @@ function generateFirstLetterImage() {
     document.getElementById('firstLetterImage').textContent = firstLetter;
 }
 
-// function submitFeedback(event) {
-//     event.preventDefault();
+function submitFeedback(event) {
+    event.preventDefault();
 
-//     const name = document.getElementById('name').value;
-//     const rating = document.getElementById('rating').value;
-//     const description = document.getElementById('description').value;
+    const name = document.getElementById('name').value;
+    const rating = document.getElementById('rating').value;
+    const description = document.getElementById('description').value;
 
-//     fetch('https://r2f-5.vercel.app/submit-feedback', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ name, rating, description })
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         alert(data.message); // Display the message from the backend
-//         fetchFeedback(); // Refresh the feedback list after submission
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//     });
-// }
+    fetch('https://r2f-5.vercel.app/submit-feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, rating, description })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message); // Display the message from the backend
+        fetchFeedback(); // Refresh the feedback list after submission
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
 // Function to fetch and display feedback
 async function fetchFeedback() {
