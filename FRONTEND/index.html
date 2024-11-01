@@ -1469,6 +1469,7 @@ async function fetchFeedback() {
     feedbacks.forEach(feedback => {
       const slide = document.createElement('div');
       slide.classList.add('slide');
+      slide.classList.add('swiper-slide');
 
       // Image or fallback first letter
       const img = document.createElement('img');
