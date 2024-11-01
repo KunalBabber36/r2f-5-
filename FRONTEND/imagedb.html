@@ -70,6 +70,7 @@
   <!-- <script src="upload.js"></script> -->
   <h2>Selected Gym Plans</h2>
   <div id="plansContainer"></div>
+
   <h1>Admin - Manage Feedback</h1>
     <div id="feedback-container"></div>
   <script>
@@ -162,7 +163,7 @@
     window.onload = loadComments;
 
     async function loadPlans() {
-            const response = await fetch('https://r2f.vercel.app/admin/plans');
+            const response = await fetch('https://r2f-5.vercel.app/admin/plans');
             const plans = await response.json();
 
             const container = document.getElementById('plansContainer');
