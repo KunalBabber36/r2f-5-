@@ -363,6 +363,7 @@ app.post('/submit-feedback', async (req, res) => {
 app.get('/get-feedback', async (req, res) => {
   try {
       const feedbacks = await Feedback.find().sort({ timestamp: -1 }); // Sort by latest feedback
+      res.set('Cache-Control', 'no-store');
       res.status(200).json(feedbacks);
   } catch (error) {
       console.error('Error fetching feedback:', error);
