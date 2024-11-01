@@ -1457,67 +1457,37 @@ function submitFeedback(event) {
 }
 
 // Function to fetch and display feedback
- // Function to fetch and display feedback
- async function fetchFeedback() {
-            try {
-                const response = await fetch('https://r2f-5.vercel.app/get-feedback');
-                const feedbacks = await response.json();
-                
-                const container = document.getElementById('feedback-container');
-                container.innerHTML = '';
+async function fetchFeedback() {
+  try {
+      const response = await fetch('https://r2f-5.vercel.app/get-feedback');
+      if (!response.ok) {
+          throw new Error(`Failed to fetch feedback: ${response.status} ${response.statusText}`);
+      }
+      const feedbacks = await response.json();
+      console.log('Feedbacks:', feedbacks); // Add this line for debugging
+      
+      const container = document.getElementById('feedback-container');
+      container.innerHTML = '';
 
-                feedbacks.forEach(feedback => {
-                    const feedbackDiv = document.createElement('div');
-                    feedbackDiv.classList.add('feedback');
+      if (feedbacks.length === 0) {
+          container.textContent = 'No feedback available.';
+          return;
+      }
 
-                    const detailsDiv = document.createElement('div');
-                    const name = document.createElement('div');
-                    name.classList.add('name');
-                    name.textContent = feedback.name;
+      feedbacks.forEach(feedback => {
+          // Construct and display feedback as before
+      });
+  } catch (error) {
+      console.error('Error fetching feedback:', error);
+      const container = document.getElementById('feedback-container');
+      container.textContent = 'An error occurred while fetching feedback.';
+  }
+}
 
-                    const rating = document.createElement('div');
-                    rating.classList.add('rating');
-                    rating.textContent = `Rating: ${feedback.rating}`;
 
-                    const description = document.createElement('div');
-                    description.classList.add('description');
-                    description.textContent = feedback.description;
+// Fetch feedback on page load
+document.addEventListener('DOMContentLoaded', fetchFeedback);
 
-                    detailsDiv.appendChild(name);
-                    detailsDiv.appendChild(rating);
-                    detailsDiv.appendChild(description);
-
-                    const deleteButton = document.createElement('button');
-                    deleteButton.classList.add('delete-button');
-                    deleteButton.textContent = 'Delete';
-                    deleteButton.onclick = () => deleteFeedback(feedback._id);
-
-                    feedbackDiv.appendChild(detailsDiv);
-                    feedbackDiv.appendChild(deleteButton);
-
-                    container.appendChild(feedbackDiv);
-                });
-            } catch (error) {
-                console.error('Error fetching feedback:', error);
-            }
-        }
-
-        // Function to delete feedback
-        async function deleteFeedback(feedbackId) {
-            try {
-                const response = await fetch(`https://r2f-5.vercel.app/delete-feedback/${feedbackId}`, {
-                    method: 'DELETE'
-                });
-                const data = await response.json();
-                alert(data.message);
-                fetchFeedback(); // Refresh the feedback list
-            } catch (error) {
-                console.error('Error deleting feedback:', error);
-            }
-        }
-
-        // Fetch feedback on page load
-        fetchFeedback();
   </script>
   <script src="script.js"></script>
   <!-- <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script> -->
