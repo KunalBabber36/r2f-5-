@@ -9,8 +9,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const FormDetail = require('./models/FormDetail'); // Import model
-const formRoutes = require('./routes/formRoutes');
-
 
 
 // Initialize the app
@@ -37,10 +35,7 @@ app.use(
   })
 );
 app.use(express.static(path.join(__dirname, 'views'))); // Serve static files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/images', express.static(path.join(__dirname, 'images'))); 
-// Routes
-app.use('/api/forms', formRoutes);
+
 
 // Middleware to check if user is authenticated
 function isAuthenticated(req, res, next) {
@@ -163,12 +158,9 @@ app.get('/', (req, res) => {
 });
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch(err => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1); // Exit the app if the connection fails
-  });
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // Define comment schema
 const commentSchema = new mongoose.Schema({

@@ -611,16 +611,40 @@ h2 {
   <div class="feedback-form-container" id="feedbackForm" style="display: none;">
       <!-- Close Button -->
       <button class="close-btn" onclick="closeFeedbackForm()">×</button>
-      <form id="form" method="POST" action="/api/forms/submit" enctype="multipart/form-data">
-        <input type="text" name="name" placeholder="Enter your name" required />
-        <input type="number" name="rating" placeholder="Rating (1-5)" min="1" max="5" required />
-        <textarea name="description" placeholder="Enter description" required></textarea>
-        <input type="file" name="image" accept="image/*" />
-        <button type="submit">Submit</button>
+      
+      <form onsubmit="submitFeedback(event)">
+          <h2>Feedback Form</h2>
+  
+          <!-- First Letter Image -->
+          <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" id="name" name="name" required oninput="generateFirstLetterImage()" placeholder="Enter your name">
+              <div class="first-letter-image" id="firstLetterImage">A</div>
+          </div>
+  
+          <!-- Rating -->
+          <div class="form-group">
+              <label for="rating">Rating:</label>
+              <select id="rating" name="rating" required>
+                  <option value="5">5 Stars</option>
+                  <option value="4">4 Stars</option>
+                  <option value="3">3 Stars</option>
+                  <option value="2">2 Stars</option>
+                  <option value="1">1 Star</option>
+              </select>
+          </div>
+  
+          <!-- Description -->
+          <div class="form-group">
+              <label for="description">Description:</label>
+              <textarea id="description" name="description" required placeholder="Enter your feedback"></textarea>
+          </div>
+  
+          <!-- Submit Button -->
+          <button type="submit">Submit Feedback</button>
       </form>
   </div>
   
-  <div id="formList"></div>
 
 <section class="container">
     <div class="testimonial mySwiper">
@@ -1534,36 +1558,7 @@ async function fetchFeedback() {
 
 // Fetch feedback on page load
 document.addEventListener('DOMContentLoaded', fetchFeedback);
-async function fetchForms() {
-    try {
-      const response = await fetch('/api/forms');
-      const forms = await response.json();
 
-      const formList = document.getElementById('formList');
-      formList.innerHTML = forms.map(form => `
-        <div class="form-entry">
-          <img src="${form.image}" alt="Image of ${form.name}" />
-          <h3>${form.name}</h3>
-          <p>Rating: ${form.rating}</p>
-          <p>${form.description}</p>
-          <button onclick="deleteForm('${form._id}')">Delete</button>
-        </div>
-      `).join('');
-    } catch (error) {
-      console.error('Error fetching forms:', error);
-    }
-  }
-
-  async function deleteForm(id) {
-    try {
-      await fetch(`/api/forms/delete/${id}`, { method: 'DELETE' });
-      fetchForms(); // Refresh the list after deletion
-    } catch (error) {
-      console.error('Error deleting form:', error);
-    }
-  }
-
-  fetchForms(); 
   </script>
   <script src="script.js"></script>
   <!-- <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script> -->
