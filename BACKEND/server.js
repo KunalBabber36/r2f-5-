@@ -9,6 +9,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const FormDetail = require('./models/FormDetail'); // Import model
+const formRoutes = require('./routes/formRoutes');
+
 
 
 // Initialize the app
@@ -35,7 +37,10 @@ app.use(
   })
 );
 app.use(express.static(path.join(__dirname, 'views'))); // Serve static files
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/images', express.static(path.join(__dirname, 'images'))); 
+// Routes
+app.use('/api/forms', formRoutes);
 
 // Middleware to check if user is authenticated
 function isAuthenticated(req, res, next) {
